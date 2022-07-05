@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
 
-# In[2]:
 
 
 
@@ -9,21 +6,16 @@ import os
 #os.environ["SDL_VIDEODRIVER"] = "dummy"
 
 
-# In[14]:
 
-
-
-# Import module
 import random
 import sys
 import pygame
 from pygame.locals import *
   
-# All the Game Variables
+
 window_width = 600
 window_height = 499
-  
-# set height and width of window
+
 window = pygame.display.set_mode((window_width, window_height))
 elevation = window_height * 0.8
 game_images = {}
@@ -41,11 +33,10 @@ def flappygame():
     ground = 0
     mytempheight = 100
   
-    # Generating two pipes for blitting on window
     first_pipe = createPipe()
     second_pipe = createPipe()
   
-    # List containing lower pipes
+  
     down_pipes = [
         {'x': window_width+300-mytempheight,
          'y': first_pipe[1]['y']},
@@ -53,7 +44,7 @@ def flappygame():
          'y': second_pipe[1]['y']},
     ]
   
-    # List Containing upper pipes
+
     up_pipes = [
         {'x': window_width+300-mytempheight,
          'y': first_pipe[0]['y']},
@@ -61,10 +52,9 @@ def flappygame():
          'y': second_pipe[0]['y']},
     ]
   
-    # pipe velocity along x
     pipeVelX = -4
   
-    # bird velocity
+
     bird_velocity_y = -9
     bird_Max_Vel_Y = 10
     bird_Min_Vel_Y = -8
@@ -82,8 +72,7 @@ def flappygame():
                     bird_velocity_y = bird_flap_velocity
                     bird_flapped = True
   
-        # This function will return true
-        # if the flappybird is crashed
+   
         game_over = isGameOver(horizontal,
                                vertical,
                                up_pipes,
@@ -107,24 +96,22 @@ def flappygame():
         playerHeight = game_images['flappybird'].get_height()
         vertical = vertical +             min(bird_velocity_y, elevation - vertical - playerHeight)
   
-        # move pipes to the left
+ 
         for upperPipe, lowerPipe in zip(up_pipes, down_pipes):
             upperPipe['x'] += pipeVelX
             lowerPipe['x'] += pipeVelX
   
-        # Add a new pipe when the first is
-        # about to cross the leftmost part of the screen
+  
         if 0 < up_pipes[0]['x'] < 5:
             newpipe = createPipe()
             up_pipes.append(newpipe[0])
             down_pipes.append(newpipe[1])
-  
-        # if the pipe is out of the screen, remove it
+
         if up_pipes[0]['x'] < -game_images['pipeimage'][0].get_width():
             up_pipes.pop(0)
             down_pipes.pop(0)
   
-        # Lets blit our game images now
+
         window.blit(game_images['background'], (0, 0))
         for upperPipe, lowerPipe in zip(up_pipes, down_pipes):
             window.blit(game_images['pipeimage'][0],
@@ -134,23 +121,21 @@ def flappygame():
   
         window.blit(game_images['sea_level'], (ground, elevation))
         window.blit(game_images['flappybird'], (horizontal, vertical))
-  
-        # Fetching the digits of score.
+ 
         numbers = [int(x) for x in list(str(your_score))]
         width = 0
   
-        # finding the width of score images from numbers.
+
         for num in numbers:
             width += game_images['scoreimages'][num].get_width()
         Xoffset = (window_width - width)/1.1
   
-        # Blitting the images on the window.
+
         for num in numbers:
             window.blit(game_images['scoreimages'][num],
                         (Xoffset, window_width*0.02))
             Xoffset += game_images['scoreimages'][num].get_width()
   
-        # Refreshing the game window and displaying the score.
         pygame.display.update()
         framepersecond_clock.tick(framepersecond)
   
@@ -187,19 +172,17 @@ def createPipe():
     return pipe
   
   
-# program where the game starts
+
 if __name__ == "__main__":
   
-        # For initializing modules of pygame library
+ 
     pygame.init()
     framepersecond_clock = pygame.time.Clock()
   
-    # Sets the title on top of game window
+
     pygame.display.set_caption('Flappy Bird Game')
   
-    # Load all the images which we will use in the game
-  
-    # images for displaying score
+
     game_images['scoreimages'] = (
         pygame.image.load('images/0.png').convert_alpha(),
         pygame.image.load('images/1.png').convert_alpha(),
@@ -224,12 +207,8 @@ if __name__ == "__main__":
   
     print("WELCOME TO THE FLAPPY BIRD GAME")
     print("Press space or enter to start the game")
-  
-    # Here starts the main game
-  
+    
     while True:
-  
-        # sets the coordinates of flappy bird
   
         horizontal = int(window_width/5)
         vertical = int(
@@ -237,18 +216,14 @@ if __name__ == "__main__":
         ground = 0
         while True:
             for event in pygame.event.get():
-  
-                # if user clicks on cross button, close the game
+ 
                 if event.type == QUIT or (event.type == KEYDOWN and                                           event.key == K_ESCAPE):
                     pygame.quit()
                     sys.exit()
   
-                # If the user presses space or
-                # up key, start the game for them
                 elif event.type == KEYDOWN and (event.key == K_SPACE or                                                event.key == K_UP):
                     flappygame()
-  
-                # if user doesn't press anykey Nothing happen
+ 
                 else:
                     window.blit(game_images['background'], (0, 0))
                     window.blit(game_images['flappybird'],
